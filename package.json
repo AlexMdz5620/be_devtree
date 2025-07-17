@@ -11,14 +11,19 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "colors": "^1.4.0",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
+    "express-validator": "^7.2.1",
     "mongodb": "^6.17.0",
-    "mongoose": "^8.16.4"
+    "mongoose": "^8.16.4",
+    "slug": "^11.0.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.3",
+    "@types/slug": "^5.0.9",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
