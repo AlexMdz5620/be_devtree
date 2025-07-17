@@ -1,18 +1,10 @@
 import { Request, Response } from 'express';
 import slug from 'slug';
 import User from "../models/User";
-import { hashPass } from '../utils/auth';
-import { validationResult } from 'express-validator';
+import { checkPass, hashPass } from '../utils/auth';
 
 export const createAccount = async (req: Request, res: Response) => {
     const { email, password } = req.body;
-
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        res.status(400).json({ errors: errors.array() });
-        return;
-    }
 
     const userExist = await User.findOne({ email });
     if (userExist) {
@@ -37,4 +29,25 @@ export const createAccount = async (req: Request, res: Response) => {
     await user.save();
 
     res.status(201).send('Usuario creado correctamente.');
+}
+
+export const login = async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+
+    // Usuario registrado
+    const user = await User.findOne({ email });
+    if (!user) {
+        const error = new Error('El usuario no existe');
+        res.status(404).json({ error: error.message });
+        return;
+    }
+    // Comprobar password
+    const isPassCorrect = await checkPass(password, user.password);
+    if (!isPassCorrect) {
+        const error = new Error('Password incorrecto');
+        res.status(401).json({ error: error.message });
+        return;
+    }
+
+    res.send('Autenticado...')
 }
