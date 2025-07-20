@@ -3,6 +3,7 @@ import slug from 'slug';
 import User from "../models/User";
 import { checkPass, hashPass } from '../utils/auth';
 import { generateJWT } from '../utils/jwt';
+import jwt from 'jsonwebtoken';
 
 export const createAccount = async (req: Request, res: Response) => {
     const { email, password } = req.body;
@@ -53,4 +54,36 @@ export const login = async (req: Request, res: Response) => {
     const token = generateJWT({ id: user.id });
 
     res.send(token);
+}
+
+export const getUser = async (req: Request, res: Response) => {
+    res.json(req.user);
+}
+
+export const updateProfile = async (req: Request, res: Response) => {
+    try {
+        const user = await User.findById(req.user?._id)
+
+        const { description } = req.body;
+        const handle = slug(req.body.handle, '');
+
+        const handleExist = await User.findOne({ handle });
+        if (handleExist && handleExist.email !== user?.email) {
+            const error = new Error('Nombre de usuario no disponible');
+            res.status(409).json({ error: error.message });
+            return;
+        }
+        
+        user!.description = description;
+        user!.handle = handle;
+        await user!.save();
+
+        res.send('Perfil actualizado correctamente');
+
+    } catch (e) {
+        console.log(e);
+        const error = new Error('Huvo un error');
+        res.status(500).json({ error: error.message });
+        return
+    }
 }
