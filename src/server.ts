@@ -5,9 +5,9 @@ import router from './router';
 import { connectDB } from './config/db';
 import { corsConfig } from './config/cors';
 
-connectDB();
-
 const app = express();
+
+connectDB();
 
 // CORS
 app.use(cors(corsConfig));
@@ -15,6 +15,16 @@ app.use(cors(corsConfig));
 app.use(express.json());
 
 // Routing
-app.use('/', router)
+app.use('/', router);
+
+// console.log("🔍 Rutas registradas:");
+// router.stack.forEach((layer: any) => { // Usa `any` temporalmente
+//   if (layer.route?.methods) { // Verifica explícitamente `methods`
+//     console.log(
+//       `${Object.keys(layer.route.methods).join(', ').toUpperCase()} -> ${layer.route.path}`
+//     );
+//   }
+// });
+
 
 export default app;
