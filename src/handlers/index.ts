@@ -66,7 +66,7 @@ export const updateProfile = async (req: Request, res: Response) => {
     try {
         const user = await User.findById(req.user?._id)
 
-        const { description } = req.body;
+        const { description, links } = req.body;
         const handle = slug(req.body.handle, '');
 
         const handleExist = await User.findOne({ handle });
@@ -78,6 +78,7 @@ export const updateProfile = async (req: Request, res: Response) => {
 
         user!.description = description;
         user!.handle = handle;
+        user!.links = links;
         await user!.save();
 
         res.send('Perfil actualizado correctamente');
