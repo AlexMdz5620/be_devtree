@@ -1,15 +1,15 @@
 import { CorsOptions } from 'cors';
+import { allowedOrigins } from './allowedOrigins';
 
 export const corsConfig: CorsOptions = {
     origin: function (origin, callback) {
-        const withList = [process.env.FRONT_URL]
+        if (!origin) return callback(null, true);
 
-        if (process.argv[2] === '--api') withList.push(undefined);
-
-        if (withList.includes(origin)) {
+        if (allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
-            callback(new Error('Error de CORS'));
+            console.log('Origen bloqueado por CORS:', origin);
+            callback(new Error('Not allowed by CORS'));
         }
     }
 }
