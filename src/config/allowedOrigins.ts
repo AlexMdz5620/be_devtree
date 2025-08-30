@@ -1,4 +1,4 @@
-const dynamicOrigins = process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : [];
+const dynamicOrigins = process.env.FRONT_URL ? [process.env.FRONT_URL] : [];
 
 export const allowedOrigins = [
     'http://localhost:5173',
